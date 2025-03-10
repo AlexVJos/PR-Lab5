@@ -1,54 +1,57 @@
 {% extends 'tasks/base.html' %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-8">
-        <div class="card">
-            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                <h3 class="mb-0">{{ task.title }}</h3>
-                <div>
-                    <a href="{% url 'task-update' task.id %}" class="btn btn-warning btn-sm">
-                        <i class="fas fa-edit"></i> Edit
-                    </a>
-                    <a href="{% url 'task-delete' task.id %}" class="btn btn-danger btn-sm">
-                        <i class="fas fa-trash"></i> Delete
-                    </a>
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0">{{ task.title }}</h3>
+                    <div>
+                        <a href="{% url 'task-update' task.id %}" class="btn btn-warning btn-sm">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                        <a href="{% url 'task-delete' task.id %}" class="btn btn-danger btn-sm">
+                            <i class="fas fa-trash"></i> Delete
+                        </a>
+                    </div>
                 </div>
-            </div>
-            <div class="card-body">
-                <div class="row mb-3">
-                    <div class="col-md-3 fw-bold">Status:</div>
-                    <div class="col-md-9">
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-3 fw-bold">Status:</div>
+                        <div class="col-md-9">
                         <span class="badge {% if task.status == 'pending' %}bg-secondary{% elif task.status == 'in_progress' %}bg-warning{% else %}bg-success{% endif %}">
                             {{ task.get_status_display }}
                         </span>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-3 fw-bold">Created:</div>
+                        <div class="col-md-9">{{ task.created_at }}</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-3 fw-bold">Last Updated:</div>
+                        <div class="col-md-9">{{ task.updated_at }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3 fw-bold">Description:</div>
+                        <div class="col-md-9">
+                            {% if task.description %}
+                                {{ task.description|linebreaks }}
+                            {% else %}
+                                <em>No description provided</em>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
-                <div class="row mb-3">
-                    <div class="col-md-3 fw-bold">Created:</div>
-                    <div class="col-md-9">{{ task.created_at }}</div>
+                <div class="card-footer text-center">
+                    <a href="{% url 'task-list' %}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to Tasks
+                    </a>
+                    <a href="{% url 'send-task-email' task.id %}" class="btn btn-info">
+                        <i class="fas fa-paper-plane"></i> Send by Email
+                    </a>
                 </div>
-                <div class="row mb-3">
-                    <div class="col-md-3 fw-bold">Last Updated:</div>
-                    <div class="col-md-9">{{ task.updated_at }}</div>
-                </div>
-                <div class="row">
-                    <div class="col-md-3 fw-bold">Description:</div>
-                    <div class="col-md-9">
-                        {% if task.description %}
-                            {{ task.description|linebreaks }}
-                        {% else %}
-                            <em>No description provided</em>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-            <div class="card-footer text-center">
-                <a href="{% url 'task-list' %}" class="btn btn-secondary">
-                    <i class="fas fa-arrow-left"></i> Back to Tasks
-                </a>
             </div>
         </div>
     </div>
-</div>
 {% endblock %}

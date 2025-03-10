@@ -11,20 +11,25 @@
             padding-top: 60px;
             background-color: #f8f9fa;
         }
+
         .navbar {
-            box-shadow: 0 2px 4px rgba(0,0,0,.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, .1);
         }
+
         .card {
             margin-bottom: 20px;
             border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,.05);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, .05);
         }
+
         .task-completed {
             background-color: #e8f5e9;
         }
+
         .task-in-progress {
             background-color: #fff8e1;
         }
+
         .btn-circle {
             width: 30px;
             height: 30px;
@@ -37,17 +42,22 @@
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
-        <div class="container">
-            <a class="navbar-brand" href="{% url 'task-list' %}">
-                <i class="fas fa-check-circle"></i> ToDo App
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    {% if user.is_authenticated %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'task-list' %}">
+            <i class="fas fa-check-circle"></i> ToDo App
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'dashboard' %}">
+                            <i class="fas fa-tachometer-alt"></i> Dashboard
+                        </a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'task-list' %}">
                             <i class="fas fa-list"></i> My Tasks
@@ -58,12 +68,29 @@
                             <i class="fas fa-plus"></i> Add Task
                         </a>
                     </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="emailDropdown" role="button"
+                           data-bs-toggle="dropdown">
+                            <i class="fas fa-envelope"></i> Email
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="emailDropdown">
+                            <li><a class="dropdown-item" href="{% url 'check-emails' %}?protocol=imap">
+                                <i class="fas fa-inbox"></i> Check Emails (IMAP)
+                            </a></li>
+                            <li><a class="dropdown-item" href="{% url 'check-emails' %}?protocol=pop3">
+                                <i class="fas fa-envelope-open"></i> Check Emails (POP3)
+                            </a></li>
+                            <li><a class="dropdown-item" href="{% url 'test-email-protocols' %}">
+                                <i class="fas fa-vial"></i> Test Email Protocols
+                            </a></li>
+                        </ul>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'logout' %}">
-                            <i class="fas fa-sign-out-alt"></i> Logout ({{ user.username }})
+                            <i class="fas fa-sign-out-alt"></i> Logout ({{ user.username }}
                         </a>
                     </li>
-                    {% else %}
+                {% else %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'login' %}">
                             <i class="fas fa-sign-in-alt"></i> Login
@@ -74,17 +101,17 @@
                             <i class="fas fa-user-plus"></i> Register
                         </a>
                     </li>
-                    {% endif %}
-                </ul>
-            </div>
+                {% endif %}
+            </ul>
         </div>
-    </nav>
-
-    <div class="container mt-4">
-        {% block content %}
-        {% endblock %}
     </div>
+</nav>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<div class="container mt-4">
+    {% block content %}
+    {% endblock %}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

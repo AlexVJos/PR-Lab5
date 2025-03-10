@@ -11,7 +11,11 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+from dotenv import load_dotenv
 import os
+
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -151,3 +155,22 @@ REST_FRAMEWORK = {
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'task-list'
 LOGOUT_REDIRECT_URL = 'login'
+
+# Email Configuration
+EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.smtp.EmailBackend')
+EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.gmail.com')
+EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 587))
+EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'True') == 'True'
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+# IMAP Configuration
+IMAP_SERVER = os.environ.get('IMAP_SERVER', 'imap.gmail.com')
+IMAP_PORT = int(os.environ.get('IMAP_PORT', 993))
+IMAP_USE_SSL = os.environ.get('IMAP_USE_SSL', 'True') == 'True'
+
+# POP3 Configuration
+POP3_SERVER = os.environ.get('POP3_SERVER', 'pop.gmail.com')
+POP3_PORT = int(os.environ.get('POP3_PORT', 995))
+POP3_USE_SSL = os.environ.get('POP3_USE_SSL', 'True') == 'True'

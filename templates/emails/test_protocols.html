@@ -1,0 +1,70 @@
+{% extends 'tasks/base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0">Email Protocols Test Results</h3>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Protocol</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>SMTP</strong> (Simple Mail Transfer Protocol)</td>
+                                <td>
+                                    {% if 'Success' in results.smtp %}
+                                        <span class="badge bg-success">Success</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">Failed</span>
+                                        <div class="small text-danger">{{ results.smtp }}</div>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>IMAP</strong> (Internet Message Access Protocol)</td>
+                                <td>
+                                    {% if 'Success' in results.imap %}
+                                        <span class="badge bg-success">Success</span>
+                                        <div class="small">{{ results.imap }}</div>
+                                    {% else %}
+                                        <span class="badge bg-danger">Failed</span>
+                                        <div class="small text-danger">{{ results.imap }}</div>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>POP3</strong> (Post Office Protocol)</td>
+                                <td>
+                                    {% if 'Success' in results.pop3 %}
+                                        <span class="badge bg-success">Success</span>
+                                        <div class="small">{{ results.pop3 }}</div>
+                                    {% else %}
+                                        <span class="badge bg-danger">Failed</span>
+                                        <div class="small text-danger">{{ results.pop3 }}</div>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer text-center">
+                <a href="{% url 'task-list' %}" class="btn btn-secondary me-2">
+                    <i class="fas fa-arrow-left"></i> Back to Tasks
+                </a>
+                <a href="{% url 'test-email-protocols' %}" class="btn btn-primary">
+                    <i class="fas fa-sync"></i> Run Tests Again
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
