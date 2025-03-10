@@ -1,0 +1,156 @@
+{% extends 'tasks/base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12 mb-4">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0">Dashboard</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <div class="card text-white bg-info">
+                            <div class="card-body">
+                                <h5 class="card-title">Total Tasks</h5>
+                                <h2 class="card-text">{{ tasks_count }}</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card text-white bg-success">
+                            <div class="card-body">
+                                <h5 class="card-title">Completed</h5>
+                                <h2 class="card-text">{{ tasks_completed }}</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card text-dark bg-warning">
+                            <div class="card-body">
+                                <h5 class="card-title">In Progress</h5>
+                                <h2 class="card-text">{{ tasks_in_progress }}</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card text-white bg-secondary">
+                            <div class="card-body">
+                                <h5 class="card-title">Pending</h5>
+                                <h2 class="card-text">{{ tasks_pending }}</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Добавлена информация о статусе почтовых протоколов -->
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <h4>Email Protocol Status</h4>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Protocol</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>SMTP</strong></td>
+                                        <td>
+                                            {% if 'Success' in mail_status.smtp %}
+                                                <span class="badge bg-success">Active</span>
+                                            {% else %}
+                                                <span class="badge bg-danger">Not Configured</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>IMAP</strong></td>
+                                        <td>
+                                            {% if 'Success' in mail_status.imap %}
+                                                <span class="badge bg-success">Active</span>
+                                            {% else %}
+                                                <span class="badge bg-danger">Not Configured</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>POP3</strong></td>
+                                        <td>
+                                            {% if 'Success' in mail_status.pop3 %}
+                                                <span class="badge bg-success">Active</span>
+                                            {% else %}
+                                                <span class="badge bg-danger">Not Configured</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="mt-3">
+                            <a href="{% url 'test-email-protocols' %}" class="btn btn-primary">
+                                <i class="fas fa-sync"></i> Test Email Protocols
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0">Recent Tasks</h3>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Status</th>
+                                <th>Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for task in tasks %}
+                            <tr>
+                                <td>{{ task.title }}</td>
+                                <td>
+                                    <span class="badge
+                                        {% if task.status == 'pending' %}bg-secondary
+                                        {% elif task.status == 'in_progress' %}bg-warning
+                                        {% elif task.status == 'completed' %}bg-success{% endif %}">
+                                        {{ task.get_status_display }}
+                                    </span>
+                                </td>
+                                <td>{{ task.created_at|date:"d M Y" }}</td>
+                                <td>
+                                    <a href="{% url 'task-detail' task.id %}" class="btn btn-sm btn-info">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="{% url 'task-update' task.id %}" class="btn btn-sm btn-warning">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="{% url 'send-task-email' task.id %}" class="btn btn-sm btn-primary">
+                                        <i class="fas fa-paper-plane"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center">No tasks found.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,78 @@
+{% extends 'tasks/base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <h3 class="mb-0">Check Emails ({{ protocol }})</h3>
+                <div>
+                    <a href="{% url 'check-emails' %}?protocol=imap&count={{ count }}" class="btn btn-light btn-sm {% if protocol == 'IMAP' %}active{% endif %}">
+                        <i class="fas fa-envelope"></i> IMAP
+                    </a>
+                    <a href="{% url 'check-emails' %}?protocol=pop3&count={{ count }}" class="btn btn-light btn-sm {% if protocol == 'POP3' %}active{% endif %}">
+                        <i class="fas fa-inbox"></i> POP3
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <form method="get" class="mb-4">
+                    <div class="row g-3 align-items-center">
+                        <div class="col-auto">
+                            <label class="col-form-label">Show</label>
+                        </div>
+                        <div class="col-auto">
+                            <select name="count" class="form-select" onchange="this.form.submit()">
+                                {% for num in '35'|make_list %}
+                                <option value="{{ num }}" {% if count == num|add:"0" %}selected{% endif %}>{{ num }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-auto">
+                            <label class="col-form-label">latest emails</label>
+                        </div>
+                        <input type="hidden" name="protocol" value="{{ protocol|lower }}">
+                    </div>
+                </form>
+
+                {% if emails %}
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">From</th>
+                                    <th scope="col">Subject</th>
+                                    <th scope="col">Preview</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for email in emails %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ email.from }}</td>
+                                    <td>{{ email.subject }}</td>
+                                    <td>{{ email.content }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i> No emails found or there was an error connecting to the email server.
+                    </div>
+                {% endif %}
+            </div>
+            <div class="card-footer text-center">
+                <a href="{% url 'task-list' %}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Tasks
+                </a>
+                <a href="{% url 'check-emails' %}?protocol={{ protocol|lower }}&count={{ count }}" class="btn btn-primary">
+                    <i class="fas fa-sync"></i> Refresh
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
