@@ -13,4 +13,6 @@ RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
 COPY --from=builder /install /usr/local
 COPY . .
 
-CMD ["/bin/sh", "-c", "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"]
+ENV DJANGO_SETTINGS_MODULE=app.settings
+
+CMD ["/bin/sh", "-c", "python manage.py migrate && daphne -b 0.0.0.0 -p 8000 app.asgi:application"]
