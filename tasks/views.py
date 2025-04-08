@@ -5,10 +5,9 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
-import json
 
 from .models import Task
 from .serializers import TaskSerializer
@@ -17,10 +16,12 @@ from .serializers import TaskSerializer
 # Create your views here.
 class TaskViewSet(viewsets.ModelViewSet):
     serializer_class = TaskSerializer
-    permission_classes = [ IsAuthenticated ]
+    permission_classes = [ AllowAny ]
 
     def get_queryset(self):
-        return Task.objects.filter(user=self.request.user)
+        if self.request.user.is_authenticated:
+            return Task.objects.filter(user=self.request.user)
+        return Task.objects.all()
 
     def perform_create(self, serializer):
         instance = serializer.save(user=self.request.user)
@@ -51,9 +52,12 @@ class TaskListView(LoginRequiredMixin, ListView):
     model = Task
     template_name = 'tasks/task_list.html'
     context_object_name = 'tasks'
+    permission_classes = [AllowAny]
 
     def get_queryset(self):
-        return Task.objects.filter(user=self.request.user)
+        if self.request.user.is_authenticated:
+            return Task.objects.filter(user=self.request.user)
+        return Task.objects.all()
 
 
 class TaskDetailView(LoginRequiredMixin, DetailView):
